@@ -1,0 +1,24 @@
+﻿<syncfusion:ChromelessWindow
+    x:Class="DeleteSketch.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:viewModel="clr-namespace:DeleteSketch.ViewModels"
+    Title="{Binding Title}"
+    Width="525"
+    Height="350"
+    d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <syncfusion:SfBusyIndicator AnimationType="Gear" IsBusy="{Binding IsBusy, Mode=TwoWay}">
+        <Button
+            Width="250"
+            Height="50"
+            Command="{Binding DeleteCommand}"
+            Content="Delete Selected Sketch" />
+    </syncfusion:SfBusyIndicator>
+</syncfusion:ChromelessWindow>

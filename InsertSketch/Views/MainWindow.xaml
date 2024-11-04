@@ -1,0 +1,78 @@
+﻿<syncfusion:ChromelessWindow
+    x:Class="InsertSketch.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:viewModel="clr-namespace:InsertSketch.ViewModels"
+    Title="{Binding Title}"
+    Width="525"
+    Height="350"
+    d:DataContext="{d:DesignInstance Type=viewModel:MainWindowViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <syncfusion:SfBusyIndicator AnimationType="Gear" IsBusy="{Binding IsBusy, Mode=TwoWay}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Foreground="Black"
+                Text="Select Plane :" />
+
+            <syncfusion:ComboBoxAdv
+                Grid.Row="1"
+                Grid.Column="2"
+                Height="50"
+                MinWidth="200"
+                HorizontalAlignment="Left"
+                ItemsSource="{Binding PlaneName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                SelectedIndex="0"
+                SelectedItem="{Binding SelectedPlane, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <syncfusion:ComboBoxAdv.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="Black"
+                            Text="{Binding}" />
+                    </DataTemplate>
+                </syncfusion:ComboBoxAdv.ItemTemplate>
+            </syncfusion:ComboBoxAdv>
+
+            <syncfusion:ButtonAdv
+                Grid.Row="3"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Width="200"
+                Height="50"
+                Command="{Binding InsertSketchCommand}"
+                FontSize="24"
+                Foreground="Black"
+                IconHeight="0"
+                IconWidth="0"
+                Label="Insert Sketch" />
+
+        </Grid>
+    </syncfusion:SfBusyIndicator>
+</syncfusion:ChromelessWindow>

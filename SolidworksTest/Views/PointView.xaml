@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="SolidworksTest.Views.PointView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:SolidworksTest.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:SolidworksTest.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewmodel:PointViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="White"
+    mc:Ignorable="d">
+    <GroupBox
+        Margin="10"
+        Padding="10"
+        BorderBrush="Black"
+        FontSize="18"
+        Foreground="Black"
+        Header="{Binding Header}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25" />
+                <RowDefinition Height="15" />
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="X Co-ordinate:" />
+
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                PreviewTextInput="TextBox_PreviewTextInput"
+                Text="{Binding XPoint}" />
+
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="Y Co-ordinate:" />
+
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                PreviewTextInput="TextBox_PreviewTextInput"
+                Text="{Binding YPoint}" />
+        </Grid>
+    </GroupBox>
+</UserControl>

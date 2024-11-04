@@ -1,0 +1,30 @@
+﻿<syncfusion:ChromelessWindow
+    x:Class="EditSketchMethods.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:viewModel="clr-namespace:EditSketchMethods.ViewModels"
+    Title="{Binding Title}"
+    Width="525"
+    Height="350"
+    d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Margin" Value="20" />
+            <Setter Property="Height" Value="50" />
+        </Style>
+    </Window.Resources>
+    <syncfusion:SfBusyIndicator AnimationType="Gear" IsBusy="{Binding IsBusy, Mode=TwoWay}">
+        <StackPanel>
+            <Button Command="{Binding EditSketchMethod}" Content="EditSketch Method" />
+            <Button Command="{Binding EditSketchOrSingleSketchFeatureMethod}" Content="EditSketchOrSingleSketchFeature Method" />
+        </StackPanel>
+    </syncfusion:SfBusyIndicator>
+</syncfusion:ChromelessWindow>
