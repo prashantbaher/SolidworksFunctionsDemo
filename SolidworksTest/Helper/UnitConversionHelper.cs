@@ -1,4 +1,5 @@
-﻿using SwConst;
+﻿using SolidworksTest.Interfaces;
+using SwConst;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SolidworksTest.Helper;
 
-public class UnitConversionHelper
+public class UnitConversionHelper : IUnitConversionHelper
 {
     #region Public Properties
 
@@ -24,7 +25,7 @@ public class UnitConversionHelper
         {
             LengthConversionFactor = AngleConversionFactor = 1;
         }
-        else if(swUnit == swLengthUnit_e.swMM)
+        else if (swUnit == swLengthUnit_e.swMM)
         {
             LengthConversionFactor = 1 / 1000;
             AngleConversionFactor = 1 * 0.01745329;

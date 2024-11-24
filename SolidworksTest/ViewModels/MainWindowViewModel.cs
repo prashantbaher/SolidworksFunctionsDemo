@@ -4,6 +4,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using SldWorks;
 using SolidworksTest.Helper;
+using SolidworksTest.Interfaces;
 using SolidworksTest.Service;
 using SwConst;
 using System;
@@ -29,15 +30,15 @@ public class MainWindowViewModel : BindableBase
         set { SetProperty(ref _isBusy, value); }
     }
 
-    private PointViewModel _startPointViewModel;
-    public PointViewModel StartPointViewModel
+    private IPointViewModel _startPointViewModel;
+    public IPointViewModel StartPointViewModel
     {
         get { return _startPointViewModel; }
         set { SetProperty(ref _startPointViewModel, value); }
     }
 
-    private PointViewModel _endPointViewModel;
-    public PointViewModel EndPointViewModel
+    private IPointViewModel _endPointViewModel;
+    public IPointViewModel EndPointViewModel
     {
         get { return _endPointViewModel; }
         set { SetProperty(ref _endPointViewModel, value); }
@@ -47,24 +48,23 @@ public class MainWindowViewModel : BindableBase
 
     #region Fields
 
-    private SldWorks.SldWorks swApp;
-    private ModelDoc2 swDoc;
     private string messageToShow;
 
     private readonly IEventAggregator eventAggregator;
     private readonly IContainerProvider container;
+    private readonly IUnitConversionHelper unitConversionHelper;
 
     #endregion
 
     #region Constructor
 
-    public MainWindowViewModel(IEventAggregator eventAggregator, IContainerProvider container)
+    public MainWindowViewModel(IEventAggregator eventAggregator, IContainerProvider container, IUnitConversionHelper unitConversionHelper)
     {
         this.eventAggregator = eventAggregator;
         this.container = container;
-
-        StartPointViewModel = this.container.Resolve<PointViewModel>();
-        EndPointViewModel = this.container.Resolve<PointViewModel>();
+        this.unitConversionHelper = unitConversionHelper;
+        StartPointViewModel = this.container.Resolve<IPointViewModel>();
+        EndPointViewModel = this.container.Resolve<IPointViewModel>();
 
         StartPointViewModel.Header = "Start Point Co-ordinates";
         EndPointViewModel.Header = "End Point Co-ordinates";
@@ -94,21 +94,41 @@ public class MainWindowViewModel : BindableBase
 
     private bool CreateLineMethod()
     {
-        swApp = new SldWorks.SldWorks();
+        ModelDoc2 swDoc;
+
+        if (CreateSolidworksInstance(out swDoc) == false)
+            return false;
+
+        swDoc.ClearSelection2(true);
+        swDoc.ViewZoomtofit2();
+        messageToShow = "Sketch line created successfully.";
+        return true;
+    }
+
+    private bool CreateSolidworksInstance(out ModelDoc2 swDoc)
+    {
+        SldWorks.SldWorks swApp = new SldWorks.SldWorks();
 
         if (swApp == null)
         {
-            messageToShow = "Failed to find Solidworks application";
+            messageToShow = "Failed to find Solidworks application.";
+            swDoc = null;
             return false;
         }
 
         swApp.Visible = true;
 
+        return CreatePartDocument(swApp, out swDoc);
+    }
+
+    private bool CreatePartDocument(SldWorks.SldWorks swApp, out ModelDoc2 swDoc)
+    {
         string defaultTemplate = swApp.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
 
         if (string.IsNullOrEmpty(defaultTemplate))
         {
-            messageToShow = "Default Part template is empty.";
+            messageToShow = "Default part template is empty.";
+            swDoc = null;
             return false;
         }
 
@@ -116,15 +136,20 @@ public class MainWindowViewModel : BindableBase
 
         if (swDoc == null)
         {
-            messageToShow = "Failed to get Solidworks document";
+            messageToShow = "Failed to create Part document.";
             return false;
         }
 
-        bool boolStatus = swDoc.Extension.SelectByID2("Right Plane", "PLANE", 0, 0, 0, false, 0, null, (int)swSelectOption_e.swSelectOptionDefault);
+        return SelectSketchPlane(swApp, swDoc);
+    }
 
-        if (boolStatus == false)
+    private bool SelectSketchPlane(SldWorks.SldWorks swApp, ModelDoc2 swDoc)
+    {
+        bool status = swDoc.Extension.SelectByID2("Right Plane", "PLANE", 0, 0, 0, false, 0, null, (int)swSelectOption_e.swSelectOptionDefault);
+
+        if (status == false)
         {
-            messageToShow = "Failed to select Right Plane.";
+            messageToShow = "Failed to select Right plane.";
             swApp.CloseAllDocuments(true);
             swApp.ExitApp();
             return false;
@@ -132,34 +157,35 @@ public class MainWindowViewModel : BindableBase
 
         swDoc.SketchManager.InsertSketch(false);
 
-        UnitConversionHelper conversionHelper = container.Resolve<UnitConversionHelper>();
-
-        var units = swDoc.GetUnits();
-
-        conversionHelper.UnitConversion((swLengthUnit_e)units[0]);
-
         double x1, y1, z1, x2, y2, z2;
+        var lengthUnit = swDoc.LengthUnit;
 
-        (x1, y1, z1) = ApplyUnitConversion(StartPointViewModel, conversionHelper.LengthConversionFactor);
-        (x2, y2, z2) = ApplyUnitConversion(EndPointViewModel, conversionHelper.LengthConversionFactor);
+        unitConversionHelper.UnitConversion((swLengthUnit_e)lengthUnit);
 
-        SketchSegment sketchSegment = swDoc.SketchManager.CreateLine(x1, y1, z1, x2, y2, z2);
+        (x1, y1, z1) = ApplyUnitConversion(StartPointViewModel, unitConversionHelper.LengthConversionFactor);
+        (x2, y2, z2) = ApplyUnitConversion(EndPointViewModel, unitConversionHelper.LengthConversionFactor);
+
+        SketchSegment sketchSegment = null;
+
+        return CreateLine(sketchSegment, x1, y1, z1, swApp, swDoc.SketchManager, x2, y2, z2);
+    }
+
+    private bool CreateLine(SketchSegment sketchSegment, double x1, double y1, double z1, SldWorks.SldWorks swApp, SketchManager sketchManager, double x2, double y2, double z2)
+    {
+        sketchSegment = sketchManager.CreateLine(x1, y1, z1, x2, y2, z2);
 
         if (sketchSegment == null)
         {
-            messageToShow = "Failed to create Sketch Line.";
+            messageToShow = "Failed to create Sketch line";
             swApp.CloseAllDocuments(true);
             swApp.ExitApp();
             return false;
         }
 
-        swDoc.ClearSelection2(true);
-        swDoc.ViewZoomtofit2();
-        messageToShow = "Sketch line successfully created.";
         return true;
     }
 
-    private (double x1, double y1, double z1) ApplyUnitConversion(PointViewModel inputPoint, double lengthConversionFactor)
+    private (double x1, double y1, double z1) ApplyUnitConversion(IPointViewModel inputPoint, double lengthConversionFactor)
     {
         double x, y, z;
 

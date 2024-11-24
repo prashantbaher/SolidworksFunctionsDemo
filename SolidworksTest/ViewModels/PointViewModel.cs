@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using SolidworksTest.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SolidworksTest.ViewModels;
-public class PointViewModel : BindableBase
+public class PointViewModel : BindableBase, IPointViewModel
 {
     #region Properties
 
@@ -44,7 +45,7 @@ public class PointViewModel : BindableBase
 
     public PointViewModel()
     {
-        
+
     }
 
     #endregion
