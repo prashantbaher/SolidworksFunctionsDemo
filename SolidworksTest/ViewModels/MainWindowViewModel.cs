@@ -48,7 +48,7 @@ public class MainWindowViewModel : BindableBase
 
     #region Fields
 
-    private string messageToShow;
+    public string messageToShow;
 
     private readonly IEventAggregator eventAggregator;
     private readonly IContainerProvider container;
@@ -65,9 +65,6 @@ public class MainWindowViewModel : BindableBase
         this.unitConversionHelper = unitConversionHelper;
         StartPointViewModel = this.container.Resolve<IPointViewModel>();
         EndPointViewModel = this.container.Resolve<IPointViewModel>();
-
-        StartPointViewModel.Header = "Start Point Co-ordinates";
-        EndPointViewModel.Header = "End Point Co-ordinates";
     }
 
     #endregion
@@ -170,7 +167,7 @@ public class MainWindowViewModel : BindableBase
         return CreateLine(sketchSegment, x1, y1, z1, swApp, swDoc.SketchManager, x2, y2, z2);
     }
 
-    private bool CreateLine(SketchSegment sketchSegment, double x1, double y1, double z1, SldWorks.SldWorks swApp, SketchManager sketchManager, double x2, double y2, double z2)
+    public bool CreateLine(SketchSegment sketchSegment, double x1, double y1, double z1, SldWorks.SldWorks swApp, SketchManager sketchManager, double x2, double y2, double z2)
     {
         sketchSegment = sketchManager.CreateLine(x1, y1, z1, x2, y2, z2);
 

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidworksTest", "SolidworksTest\SolidworksTest.csproj", "{870C5406-9F3B-4957-8871-ECFE2E52D503}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidworksDemo.Test", "SolidworksDemo.Test\SolidworksDemo.Test.csproj", "{7AF170B1-4795-4A78-B3DB-4616CE4BE1FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{870C5406-9F3B-4957-8871-ECFE2E52D503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{870C5406-9F3B-4957-8871-ECFE2E52D503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{870C5406-9F3B-4957-8871-ECFE2E52D503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF170B1-4795-4A78-B3DB-4616CE4BE1FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF170B1-4795-4A78-B3DB-4616CE4BE1FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF170B1-4795-4A78-B3DB-4616CE4BE1FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF170B1-4795-4A78-B3DB-4616CE4BE1FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
