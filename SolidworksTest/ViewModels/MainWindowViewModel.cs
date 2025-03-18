@@ -118,7 +118,7 @@ public class MainWindowViewModel : BindableBase
         return CreatePartDocument(swApp, out swDoc);
     }
 
-    private bool CreatePartDocument(SldWorks.SldWorks swApp, out ModelDoc2 swDoc)
+    public bool CreatePartDocument(SldWorks.SldWorks swApp, out ModelDoc2 swDoc)
     {
         string defaultTemplate = swApp.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
 
@@ -140,7 +140,7 @@ public class MainWindowViewModel : BindableBase
         return SelectSketchPlane(swApp, swDoc);
     }
 
-    private bool SelectSketchPlane(SldWorks.SldWorks swApp, ModelDoc2 swDoc)
+    public virtual bool SelectSketchPlane(SldWorks.SldWorks swApp, ModelDoc2 swDoc)
     {
         bool status = swDoc.Extension.SelectByID2("Right Plane", "PLANE", 0, 0, 0, false, 0, null, (int)swSelectOption_e.swSelectOptionDefault);
 
@@ -182,7 +182,7 @@ public class MainWindowViewModel : BindableBase
         return true;
     }
 
-    private (double x1, double y1, double z1) ApplyUnitConversion(IPointViewModel inputPoint, double lengthConversionFactor)
+    public (double x1, double y1, double z1) ApplyUnitConversion(IPointViewModel inputPoint, double lengthConversionFactor)
     {
         double x, y, z;
 
